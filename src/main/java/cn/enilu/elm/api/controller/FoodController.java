@@ -38,11 +38,10 @@ public class FoodController extends BaseController {
     @Autowired
     private IdsService idsService;
 
-    @RequestMapping(value = "addfood",method = RequestMethod.GET)
-
-    public Object add(HttpServletRequest request) {
-        String json = getRequestPayload();
-        Food food = Json.fromJson(Food.class, json);
+    @RequestMapping(value = "addfood", method = RequestMethod.POST)
+    public Object add(Food food) {
+//        String json = getRequestPayload();
+//        Food food = Json.fromJson(Food.class, json);
         food.setItem_id(idsService.getId(Ids.ITEM_ID));
         List<SpecFood> specFoods = new ArrayList<SpecFood>(2);
         specFoods.add(buidSpecFood(food));
