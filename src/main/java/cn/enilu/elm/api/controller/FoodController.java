@@ -11,7 +11,11 @@ import cn.enilu.elm.api.vo.Rets;
 import com.google.common.base.Strings;
 import org.nutz.json.Json;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -44,47 +48,46 @@ public class FoodController extends BaseController {
         specFoods.add(buidSpecFood(food));
         food.setSpecfoods(specFoods);
         setTips(food);
-        food.setSatisfy_rate(new BigDecimal(Math.ceil(Math.random() * 100)).setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue());
-        food.setSatisfy_count(new BigDecimal(Math.ceil(Math.random() * 1000)).setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue());
-        food.setRating(new BigDecimal(Math.random() * 5).setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue());
+        food.setSatisfy_rate(new BigDecimal(Math.ceil(Math.random() * 100)).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
+        food.setSatisfy_count(new BigDecimal(Math.ceil(Math.random() * 1000)).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
+        food.setRating(new BigDecimal(Math.random() * 5).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
         baseDao.save(food);
         return Rets.success();
     }
-    @RequestMapping(value="/v2/foods",method = RequestMethod.GET)
+
+    @RequestMapping(value = "/v2/foods", method = RequestMethod.GET)
     public Object list(@RequestParam("restaurant_id") String restaurantId,
                        @RequestParam(value = "offset", defaultValue = "0") Integer offset,
                        @RequestParam(value = "limit", defaultValue = "20") Integer limit) {
-        restaurantId="11";
+        restaurantId = "11";
         if (Strings.isNullOrEmpty(restaurantId) || "undefined".equals(restaurantId)) {
             return baseDao.findAll(Food.class);
         } else {
-            return baseDao.findAll(Food.class,"restaurant_id",Long.valueOf(restaurantId));
+            return baseDao.findAll(Food.class, "restaurant_id", Long.valueOf(restaurantId));
         }
     }
 
-    @RequestMapping(value = "/v2/foods/count",method = RequestMethod.GET)
+    @RequestMapping(value = "/v2/foods/count", method = RequestMethod.GET)
 
     public Object count() {
         long count = baseDao.count("foods");
         return Rets.success("count", count);
     }
-    @RequestMapping(value = "/v2/food/{id}",method = RequestMethod.DELETE)
+
+    @RequestMapping(value = "/v2/food/{id}", method = RequestMethod.DELETE)
 
     public Object delete(@PathVariable("id") Long id) {
-         baseDao.delete("foods",Maps.newHashMap("item_id",id));
+        baseDao.delete("foods", Maps.newHashMap("item_id", id));
         return Rets.success();
     }
+
     //todo 未完成
-    @RequestMapping(value = "/v2/updatefood",method = RequestMethod.POST)
-    public Object update(HttpServletRequest request){
-        Map<String,Object> data = getRequestPayload(Map.class);
+    @RequestMapping(value = "/v2/updatefood", method = RequestMethod.POST)
+    public Object update(HttpServletRequest request) {
+        Map<String, Object> data = getRequestPayload(Map.class);
         System.out.println(Json.toJson(data));
         return Rets.success();
     }
-
-
-
-
 
 
     private void setTips(Food food) {

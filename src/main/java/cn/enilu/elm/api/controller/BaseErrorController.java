@@ -34,10 +34,10 @@ public class BaseErrorController implements ErrorController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Map<String, Object> error(HttpServletRequest aRequest){
-        Map<String, Object> body = getErrorAttributes(aRequest,getTraceParameter(aRequest));
+    public Map<String, Object> error(HttpServletRequest aRequest) {
+        Map<String, Object> body = getErrorAttributes(aRequest, getTraceParameter(aRequest));
         String trace = (String) body.get("trace");
-        if(trace != null){
+        if (trace != null) {
             String[] lines = trace.split("\n\t");
             body.put("trace", lines);
         }

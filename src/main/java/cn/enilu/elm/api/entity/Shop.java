@@ -24,10 +24,10 @@ public class Shop implements BaseEntity {
     private String phone;
     private String category;
     private List supports;
-    private Integer status=1;
-    private Integer recent_order_num=500;
-    private Integer rating_count=200;
-    private Double rating=4.5;
+    private Integer status = 1;
+    private Integer recent_order_num = 500;
+    private Integer rating_count = 200;
+    private Double rating = 4.5;
     private String promotion_info;
     private Map piecewise_agent_fee;
 

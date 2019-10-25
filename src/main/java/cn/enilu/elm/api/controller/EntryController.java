@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class EntryController extends BaseController {
     @Autowired
     private BaseDao baseDao;
-    @RequestMapping(value = "/v2/index_entry",method = RequestMethod.GET)
-    public Object list(){
+
+    @RequestMapping(value = "/v2/index_entry", method = RequestMethod.GET)
+    public Object list() {
         return baseDao.findAll(Entry.class);
     }
 }

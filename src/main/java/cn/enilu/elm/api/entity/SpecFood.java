@@ -14,16 +14,16 @@ public class SpecFood {
     private String pinyin_name;
     private Long restaurant_id;
     private Long food_id;
-    private Double packing_fee=0.0;
-    private Double recent_rating=0.0;
-    private Double promotion_stock=-1.0;
+    private Double packing_fee = 0.0;
+    private Double recent_rating = 0.0;
+    private Double promotion_stock = -1.0;
     private Double price;
     private Boolean sold_out;
-    private Double recent_popularity=0.0;
-    private Boolean is_essential=false;
+    private Double recent_popularity = 0.0;
+    private Boolean is_essential = false;
     private Long item_id;
-    private Integer checkout_mode=0;
-    private Integer stock=1000;
+    private Integer checkout_mode = 0;
+    private Integer stock = 1000;
     private String specs_name;
     private List<KeyValue> specs;
 

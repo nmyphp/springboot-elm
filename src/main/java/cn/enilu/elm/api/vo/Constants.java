@@ -6,5 +6,5 @@ package cn.enilu.elm.api.vo;
  * @author zt
  */
 public class Constants {
-    public static  final String SESSION_ID="login_user_session";
+    public static final String SESSION_ID = "login_user_session";
 }

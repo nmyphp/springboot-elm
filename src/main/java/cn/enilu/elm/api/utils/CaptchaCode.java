@@ -13,12 +13,12 @@ import java.util.Random;
  * @author zt
  */
 public class CaptchaCode {
-    public static  String CAPTCH_KEY = "captcha";
-    private static char mapTable[] = {
-            '0', '1', '2', '3', '4', '5',
-            '6', '7', '8', '9', '0', '1',
-            '2', '3', '4', '5', '6', '7',
-            '8', '9'};
+    public static String CAPTCH_KEY = "captcha";
+    private static char[] mapTable = {
+        '0', '1', '2', '3', '4', '5',
+        '6', '7', '8', '9', '0', '1',
+        '2', '3', '4', '5', '6', '7',
+        '8', '9'};
 
     public static Map<String, Object> getImageCode(int width, int height, OutputStream os) {
         Map<String, Object> returnMap = new HashMap<String, Object>();

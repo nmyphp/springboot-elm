@@ -15,10 +15,18 @@ import org.nutz.lang.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.GeoResult;
 import org.springframework.data.geo.GeoResults;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created  on 2018/1/2 0002.
@@ -34,50 +42,52 @@ public class ShopController extends BaseController {
     private IdsService idsService;
     @Autowired
     private PositionService positionService;
-    @RequestMapping(value = "/restaurant/{id}",method = RequestMethod.GET)
 
-    public Object getShop(@PathVariable("id")Long id) {
-        Object data = baseDao.findOne(id,"shops");
-        return data ;
+    @RequestMapping(value = "/restaurant/{id}", method = RequestMethod.GET)
+
+    public Object getShop(@PathVariable("id") Long id) {
+        Object data = baseDao.findOne(id, "shops");
+        return data;
     }
 
-    @RequestMapping(value = "restaurants",method = RequestMethod.GET)
+    @RequestMapping(value = "restaurants", method = RequestMethod.GET)
 
     public Object listShop(@RequestParam("latitude") String latitude, @RequestParam("longitude") String longitude,
-                       @RequestParam( "offset") Integer offset,
-                       @RequestParam("limit") Integer limit) {
+                           @RequestParam("offset") Integer offset,
+                           @RequestParam("limit") Integer limit) {
         if (com.google.common.base.Strings.isNullOrEmpty(latitude) || "undefined".equals(latitude)
-                || com.google.common.base.Strings.isNullOrEmpty(longitude) || "undefined".equals(longitude)) {
+            || com.google.common.base.Strings.isNullOrEmpty(longitude) || "undefined".equals(longitude)) {
             return baseDao.findAll("shops");
         } else {
             //查询指定经纬度范围内的餐厅
-            GeoResults<Map> geoResults =  baseDao.near(Double.valueOf(longitude),Double.valueOf(latitude),"shops");
-            List<GeoResult<Map>> geoResultList =  geoResults.getContent();
+            GeoResults<Map> geoResults = baseDao.near(Double.valueOf(longitude), Double.valueOf(latitude), "shops");
+            List<GeoResult<Map>> geoResultList = geoResults.getContent();
             List list = Lists.newArrayList();
-            for(int i=0;i<geoResultList.size();i++){
+            for (int i = 0; i < geoResultList.size(); i++) {
                 list.add(geoResultList.get(i).getContent());
             }
             return list;
         }
     }
 
-    @RequestMapping(value = "/restaurants/count",method = RequestMethod.GET)
+    @RequestMapping(value = "/restaurants/count", method = RequestMethod.GET)
 
     public Object countShop() {
         long count = baseDao.count(Shop.class);
         return Rets.success("count", count);
     }
-    @RequestMapping(value = "/restaurants/{id}",method = RequestMethod.DELETE)
 
-    public Object deleteShop(@PathVariable("id")Long id) {
-        baseDao.delete(id,"shops");
+    @RequestMapping(value = "/restaurants/{id}", method = RequestMethod.DELETE)
+
+    public Object deleteShop(@PathVariable("id") Long id) {
+        baseDao.delete(id, "shops");
         return Rets.success();
     }
 
-    @RequestMapping(value = "/updateshop",method = RequestMethod.POST)
+    @RequestMapping(value = "/updateshop", method = RequestMethod.POST)
 
     public Object updateShop(HttpServletRequest request) {
-        Map data =   getRequestPayload( Map.class);
+        Map data = getRequestPayload(Map.class);
         Map<String, Object> updateMap = new HashMap<String, Object>(16);
         updateMap.put("name", Strings.sNull(data.get("name")));
         updateMap.put("address", Strings.sNull(data.get("address")));
@@ -91,8 +101,7 @@ public class ShopController extends BaseController {
         return Rets.success();
     }
 
-    @RequestMapping(value = "/addShop",method = RequestMethod.POST)
-
+    @RequestMapping(value = "/addShop", method = RequestMethod.POST)
     public Object addShop(HttpServletRequest request) {
         String json = getRequestPayload();
         Map data = (Map) Json.fromJson(json);
@@ -120,7 +129,7 @@ public class ShopController extends BaseController {
         shop.setPiecewise_agent_fee(tips);
         List<String> openingHours = new ArrayList<String>();
         if (Strings.isNotBlank(Strings.sNull(data.get("startTime"))) &&
-                Strings.isNotBlank(Strings.sNull(data.get("endTime")))) {
+            Strings.isNotBlank(Strings.sNull(data.get("endTime")))) {
             openingHours.add(data.get("startTime").toString() + "/" + data.get("endTime").toString());
         } else {
             openingHours.add("08:30/20:30");
@@ -139,15 +148,15 @@ public class ShopController extends BaseController {
 
 
         Map<String, String> identification = Maps.newHashMap("company_name", "",
-                "identificate_agency", "",
-                "identificate_date", "",
-                "legal_person", "",
-                "licenses_date", "",
-                "licenses_number", "",
-                "licenses_scope", "",
-                "operation_period", "",
-                "registered_address", "",
-                "registered_number", "");
+            "identificate_agency", "",
+            "identificate_date", "",
+            "legal_person", "",
+            "licenses_date", "",
+            "licenses_number", "",
+            "licenses_scope", "",
+            "operation_period", "",
+            "registered_address", "",
+            "registered_number", "");
         shop.setIdentification(identification);
 
         List activities = (List) data.get("activities");
@@ -192,23 +201,24 @@ public class ShopController extends BaseController {
         return Rets.success();
     }
 
-    @RequestMapping(value = "addcategory",method = RequestMethod.POST)
+    @RequestMapping(value = "addcategory", method = RequestMethod.POST)
 
     public Object addCategory(HttpServletRequest request) {
-        Menu menu = getRequestPayload( Menu.class);
+        Menu menu = getRequestPayload(Menu.class);
         menu.setId(idsService.getId(Ids.CATEGORY_ID));
         System.out.println(Json.toJson(menu));
         //todo 进行处理后保存
         baseDao.save(menu);
         return Rets.success();
     }
-    @RequestMapping(value = "/v2/restaurant/category",method = RequestMethod.GET)
+
+    @RequestMapping(value = "/v2/restaurant/category", method = RequestMethod.GET)
 
     public Object categories() {
         return baseDao.findAll("categories");
     }
 
-    @RequestMapping(value = "/getcategory/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/getcategory/{id}", method = RequestMethod.GET)
 
     public Object getCategory(@PathVariable("id") Long restaurantId) {
         List list = baseDao.findAll("menus", "restaurant_id", restaurantId);
@@ -216,15 +226,16 @@ public class ShopController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/v2/menu{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/v2/menu{id}", method = RequestMethod.GET)
 
-    public Object getMenus(@PathVariable("id")Long id){
-        return baseDao.findOne(id,"menus");
+    public Object getMenus(@PathVariable("id") Long id) {
+        return baseDao.findOne(id, "menus");
     }
-    @RequestMapping(value = "/v2/menu",method = RequestMethod.GET)
 
-    public Object getMenu(@RequestParam("restaurant_id")Long restaurantId, @RequestParam("allMenu")boolean allMEnu){
-        return baseDao.findAll("menus","restaurant_id",restaurantId);
+    @RequestMapping(value = "/v2/menu", method = RequestMethod.GET)
+
+    public Object getMenu(@RequestParam("restaurant_id") Long restaurantId, @RequestParam("allMenu") boolean allMEnu) {
+        return baseDao.findAll("menus", "restaurant_id", restaurantId);
     }
 
 

@@ -15,7 +15,7 @@ public class Food implements BaseEntity {
     @Id
     private String _id;
     private Double rating;
-    private Integer is_featured=0;
+    private Integer is_featured = 0;
     private Long restaurant_id;
     private Long category_id;
     private String pinyin_name;

@@ -3,7 +3,10 @@ package cn.enilu.elm.api.controller;
 import cn.enilu.elm.api.entity.Delivery;
 import cn.enilu.elm.api.repository.BaseDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created  on 2018/1/5 0005.
@@ -15,9 +18,9 @@ public class DeliveryController extends BaseController {
     @Autowired
     private BaseDao baseDao;
 
-    @RequestMapping(value = "/shopping/v1/restaurants/delivery_modes",method = RequestMethod.GET)
-    public Object list(@RequestParam(value = "latitude",required = false) String latitude,
-                       @RequestParam(value = "longitude",required = false) String longitude){
+    @RequestMapping(value = "/shopping/v1/restaurants/delivery_modes", method = RequestMethod.GET)
+    public Object list(@RequestParam(value = "latitude", required = false) String latitude,
+                       @RequestParam(value = "longitude", required = false) String longitude) {
         return baseDao.findAll(Delivery.class);
     }
 }

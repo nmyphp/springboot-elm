@@ -14,11 +14,10 @@ import java.util.Map;
 public class IndexController {
 
 
-
     @RequestMapping(method = RequestMethod.GET)
 
-    public Object index(Map<String,Object> map){
-       return  "欢迎光临springboot-elm的api服务,点击进入<a href=\"/swagger-ui.html\">api文档</a>";
+    public Object index(Map<String, Object> map) {
+        return "欢迎光临springboot-elm的api服务,点击进入<a href=\"/swagger-ui.html\">api文档</a>";
     }
 
 

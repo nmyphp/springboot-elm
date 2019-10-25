@@ -22,20 +22,20 @@ public class Swagger2Configuration {
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("cn.enilu.elm.api.controller"))
-                .paths(PathSelectors.any())
-                .build();
+            .apiInfo(apiInfo())
+            .select()
+            .apis(RequestHandlerSelectors.basePackage("cn.enilu.elm.api.controller"))
+            .paths(PathSelectors.any())
+            .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("node-elm的spring boot版")
-                .description("本文档参考官方文档：https://github.com/bailicangdu/node-elm/blob/master/API.md")
-                .termsOfServiceUrl("www.enilu.cn")
-                .contact("enilu.cn")
-                .version("1.0")
-                .build();
+            .title("node-elm的spring boot版")
+            .description("本文档参考官方文档：https://github.com/bailicangdu/node-elm/blob/master/API.md")
+            .termsOfServiceUrl("www.enilu.cn")
+            .contact("enilu.cn")
+            .version("1.0")
+            .build();
     }
 }

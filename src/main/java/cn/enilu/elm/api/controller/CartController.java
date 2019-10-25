@@ -23,15 +23,17 @@ public class CartController extends BaseController {
     private BaseDao baseDao;
     @Autowired
     private IdsService idsService;
-    @RequestMapping(value = "/v1/carts/checkout",method = RequestMethod.POST)
-    public Object checkout(HttpServletRequest request){
+
+    @RequestMapping(value = "/v1/carts/checkout", method = RequestMethod.POST)
+    public Object checkout(HttpServletRequest request) {
         Map data = getRequestPayload(Map.class);
-        data.put("id",idsService.getId(Ids.CATEGORY_ID));
-        baseDao.save(data,"carts");
-        return  null;
+        data.put("id", idsService.getId(Ids.CATEGORY_ID));
+        baseDao.save(data, "carts");
+        return null;
     }
-    @RequestMapping(value = "v1/carts/${cart_id}/remarks",method = RequestMethod.GET)
-    public Object remarks(@PathVariable("cart_id")Long cartId){
+
+    @RequestMapping(value = "v1/carts/${cart_id}/remarks", method = RequestMethod.GET)
+    public Object remarks(@PathVariable("cart_id") Long cartId) {
         return baseDao.findOne("remarks");
     }
 }

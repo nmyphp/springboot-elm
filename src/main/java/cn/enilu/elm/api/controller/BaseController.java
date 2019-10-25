@@ -13,13 +13,14 @@ import java.util.Map;
 
 /**
  * Created on 2017/12/29 0029.
+ *
  * @author zt
  */
 public class BaseController {
 
-    protected  String getRequestPayload( ){
+    protected String getRequestPayload() {
         StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = getRequest().getReader();) {
+        try (BufferedReader reader = getRequest().getReader()) {
             char[] buff = new char[1024];
             int len;
             while ((len = reader.read(buff)) != -1) {
@@ -30,36 +31,40 @@ public class BaseController {
         }
         return sb.toString();
     }
-    protected  <T>T getRequestPayload(  Class<T> klass)     {
+
+    protected <T> T getRequestPayload(Class<T> klass) {
         String json = getRequestPayload();
         try {
             T result = null;
-            if(klass==Map.class||klass==null){
+            if (klass == Map.class || klass == null) {
                 result = (T) Json.fromJson(json);
-            }else {
-               result = Json.fromJson( klass,json);
+            } else {
+                result = Json.fromJson(klass, json);
             }
             return result;
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
         return null;
     }
-    protected HttpServletRequest getRequest(){
+
+    protected HttpServletRequest getRequest() {
         RequestAttributes ra = RequestContextHolder.getRequestAttributes();
         ServletRequestAttributes sra = (ServletRequestAttributes) ra;
         return sra.getRequest();
     }
-    protected Object getSession(String key){
+
+    protected Object getSession(String key) {
         return getRequest().getSession().getAttribute(key);
     }
-    protected  void setSession(  String key,Object val){
-        getRequest().getSession().setAttribute(key,val);
+
+    protected void setSession(String key, Object val) {
+        getRequest().getSession().setAttribute(key, val);
     }
 
-    public String getIp(){
+    public String getIp() {
         String ip = getRequest().getHeader("x-forwarded-for");
-        if(Strings.isNullOrEmpty(ip)){
+        if (Strings.isNullOrEmpty(ip)) {
             //测试ip
             ip = "101.81.121.39";
         }

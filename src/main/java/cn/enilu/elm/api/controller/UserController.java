@@ -27,74 +27,75 @@ public class UserController extends BaseController {
     @Autowired
     private BaseDao baseDao;
 
-    @RequestMapping(value = "/v1/user",method = RequestMethod.GET)
-    public Object getUser(){
+    @RequestMapping(value = "/v1/user", method = RequestMethod.GET)
+    public Object getUser() {
         return getSession("currentUser");
     }
 
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public Object list(@RequestParam("offset") Integer offset,@RequestParam("limit") Integer limit){
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public Object list(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit) {
         List list = baseDao.findAll("userinfos");
         return list;
     }
-    @RequestMapping(value = "/count",method = RequestMethod.GET)
-    public Object count(){
-        return Rets.success("count",2);
+
+    @RequestMapping(value = "/count", method = RequestMethod.GET)
+    public Object count() {
+        return Rets.success("count", 2);
     }
 
-    @RequestMapping(value = "/v2/login",method = RequestMethod.POST)
-    public Object login(@RequestParam("username")String userName,
-                        @RequestParam("password")String password,
+    @RequestMapping(value = "/v2/login", method = RequestMethod.POST)
+    public Object login(@RequestParam("username") String userName,
+                        @RequestParam("password") String password,
                         @RequestParam("captcha_code") String captchaCode
-                      ){
+    ) {
         String captch = (String) getSession(CaptchaCode.CAPTCH_KEY);
-        if(!Strings.equals(captchaCode,captch)){
-            return Rets.failure(Maps.newHashMap("type","ERROR_CAPTCHA","message","验证码不正确"));
+        if (!Strings.equals(captchaCode, captch)) {
+            return Rets.failure(Maps.newHashMap("type", "ERROR_CAPTCHA", "message", "验证码不正确"));
         }
-        Map user = baseDao.findOne("users","username",userName,"password",password);
-        if(user!=null) {
+        Map user = baseDao.findOne("users", "username", userName, "password", password);
+        if (user != null) {
             Map userInfo = baseDao.findOne("userinfos", "user_id", Long.valueOf(user.get("user_id").toString()));
             Object result = Mapl.merge(user, userInfo);
-            setSession("currentUser",result);
+            setSession("currentUser", result);
             return result;
         }
-        return Rets.failure(Maps.newHashMap("type","ERROR_PASSWORD","message","密码错误"));
+        return Rets.failure(Maps.newHashMap("type", "ERROR_PASSWORD", "message", "密码错误"));
 
     }
-    @RequestMapping(value = "/v2/signout",method = RequestMethod.GET)
-    public Object signOut(){
+
+    @RequestMapping(value = "/v2/signout", method = RequestMethod.GET)
+    public Object signOut() {
         getRequest().getSession().removeAttribute("currentUser");
         return Rets.success();
     }
-    @RequestMapping(value = "/v2/changepassword",method = RequestMethod.POST)
-    public Object changePassword(@RequestParam("username")String userName,
-                                 @RequestParam("oldpassWord")String oldPassword,
-                                 @RequestParam("newpassword")String newPassword,
-                                 @RequestParam("confirmpassword")String confirmPassword,
-                                 @RequestParam("captcha_code")String captchaCode){
+
+    @RequestMapping(value = "/v2/changepassword", method = RequestMethod.POST)
+    public Object changePassword(@RequestParam("username") String userName,
+                                 @RequestParam("oldpassWord") String oldPassword,
+                                 @RequestParam("newpassword") String newPassword,
+                                 @RequestParam("confirmpassword") String confirmPassword,
+                                 @RequestParam("captcha_code") String captchaCode) {
 
         String captch = (String) getSession(CaptchaCode.CAPTCH_KEY);
-        if(!Strings.equals(captchaCode,captch)){
-            return Rets.failure(Maps.newHashMap("type","ERROR_CAPTCHA","message","验证码不正确"));
+        if (!Strings.equals(captchaCode, captch)) {
+            return Rets.failure(Maps.newHashMap("type", "ERROR_CAPTCHA", "message", "验证码不正确"));
         }
-        Map user = baseDao.findOne("users","username",userName);
-        if(user==null){
-            return Rets.failure(Maps.newHashMap("type","ERROR_QUERY","message","用户不存在"));
+        Map user = baseDao.findOne("users", "username", userName);
+        if (user == null) {
+            return Rets.failure(Maps.newHashMap("type", "ERROR_QUERY", "message", "用户不存在"));
         }
-        if(!Strings.equals(oldPassword,Strings.sNull(user.get("password")))){
-            return Rets.failure(Maps.newHashMap("type","ERROR_QUERY","message","原密码错误"));
+        if (!Strings.equals(oldPassword, Strings.sNull(user.get("password")))) {
+            return Rets.failure(Maps.newHashMap("type", "ERROR_QUERY", "message", "原密码错误"));
         }
-        if(Strings.equals(newPassword,confirmPassword)){
-            return Rets.failure(Maps.newHashMap("type","ERROR_QUERY","message","新密码不一致"));
+        if (Strings.equals(newPassword, confirmPassword)) {
+            return Rets.failure(Maps.newHashMap("type", "ERROR_QUERY", "message", "新密码不一致"));
         }
 
-        user.put("password",newPassword);
-        baseDao.update(Long.valueOf(user.get("id").toString()),"users",user);
+        user.put("password", newPassword);
+        baseDao.update(Long.valueOf(user.get("id").toString()), "users", user);
 
         return Rets.success();
     }
-
-
 
 
 }

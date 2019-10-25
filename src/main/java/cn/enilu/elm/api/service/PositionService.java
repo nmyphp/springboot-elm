@@ -39,7 +39,7 @@ public class PositionService {
             String str = HttpClients.get(appConfiguration.getApiQqGetLocation(), map);
             result = (Map) Json.fromJson(str);// new JsonParser().parse(str).getAsJsonObject();
         } catch (Exception e) {
-            logger.error("获取地理位置异常",e);
+            logger.error("获取地理位置异常", e);
         }
         if (result == null || Integer.valueOf(result.get("status").toString()) != 0) {
             try {
@@ -47,7 +47,7 @@ public class PositionService {
                 String str = HttpClients.get(appConfiguration.getApiQqGetLocation(), map);
                 result = (Map) Json.fromJson(str);
             } catch (Exception e) {
-                logger.error("获取地理位置异常",e);
+                logger.error("获取地理位置异常", e);
             }
         }
         if (result == null || Integer.valueOf(result.get("status").toString()) != 0) {
@@ -56,17 +56,17 @@ public class PositionService {
                 String str = HttpClients.get(appConfiguration.getApiQqGetLocation(), map);
                 result = (Map) Json.fromJson(str);
             } catch (Exception e) {
-                logger.error("获取地理位置异常",e);
+                logger.error("获取地理位置异常", e);
             }
 
         }
-        if ( Integer.valueOf(result.get("status").toString()) == 0) {
+        if (Integer.valueOf(result.get("status").toString()) == 0) {
             Map resultData = (Map) result.get("result");
 
-            String lat = String.valueOf(Mapl.cell(resultData,"location.lat"));
-            String lng = String.valueOf( Mapl.cell(resultData,"location.lng"));
-            String city = (String) Mapl.cell(resultData,"ad_info.city");
-            city = city.replace("市","");
+            String lat = String.valueOf(Mapl.cell(resultData, "location.lat"));
+            String lng = String.valueOf(Mapl.cell(resultData, "location.lng"));
+            String city = (String) Mapl.cell(resultData, "ad_info.city");
+            city = city.replace("市", "");
             CityInfo cityInfo = new CityInfo();
             cityInfo.setCity(city);
             cityInfo.setLat(lat);
@@ -77,25 +77,26 @@ public class PositionService {
         return null;
     }
 
-    public List searchPlace(String cityName,String keyword){
-        Map<String,String> params = Maps.newHashMap();
-        params.put("key",appConfiguration.getTencentKey());
+    public List searchPlace(String cityName, String keyword) {
+        Map<String, String> params = Maps.newHashMap();
+        params.put("key", appConfiguration.getTencentKey());
         params.put("keyword", URLEncoder.encode(keyword));
-        params.put("boundary","region("+URLEncoder.encode(cityName)+",0)");
-        params.put("page_size","10");
+        params.put("boundary", "region(" + URLEncoder.encode(cityName) + ",0)");
+        params.put("page_size", "10");
         try {
             String str = HttpClients.get(appConfiguration.getApiQqSearchPlace(), params);
             Map result = (Map) Json.fromJson(str);
             if (Integer.valueOf(result.get("status").toString()).intValue() == 0) {
-               return (List) result.get("data");
+                return (List) result.get("data");
             }
-        }catch (Exception e){
-            throw  new RuntimeException(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
         return null;
 
     }
-    public Map findById(Integer id){
+
+    public Map findById(Integer id) {
         Map cities = baseDao.findOne("cities");
         Map<String, List> data = (Map) cities.get("data");
         Map result = null;
@@ -111,7 +112,8 @@ public class PositionService {
         }
         return result;
     }
-    public Map findByName(String cityName){
+
+    public Map findByName(String cityName) {
         Map cities = baseDao.findOne("cities");
         Map<String, List> data = (Map) cities.get("data");
         Map result = null;

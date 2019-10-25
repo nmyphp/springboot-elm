@@ -36,13 +36,15 @@ public class BaseDao {
     public void delete(Long id, String collectionName) {
         mongoTemplate.remove(Query.query(Criteria.where("id").is(id)), collectionName);
     }
-    public void delete(String collectionName,Map<String,Object> keyValues){
-        mongoTemplate.remove(Query.query(criteria(keyValues)),collectionName);
+
+    public void delete(String collectionName, Map<String, Object> keyValues) {
+        mongoTemplate.remove(Query.query(criteria(keyValues)), collectionName);
     }
 
-    public void update(BaseEntity entity){
+    public void update(BaseEntity entity) {
         mongoTemplate.save(entity);
     }
+
     public WriteResult update(Long id, String collectionName, Map<String, Object> keyValues) {
         Update update = null;
         for (Map.Entry<String, Object> entry : keyValues.entrySet()) {
@@ -54,11 +56,13 @@ public class BaseDao {
         }
         return mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, collectionName);
     }
-    public <T, P> T findOne(Class<T> klass,P key) {
-        return findOne(klass,"id",key);
+
+    public <T, P> T findOne(Class<T> klass, P key) {
+        return findOne(klass, "id", key);
     }
-    public <T> T findOne(Class<T> klass, String key,Object value) {
-        return mongoTemplate.findOne(Query.query(Criteria.where(key).is(value)),klass);
+
+    public <T> T findOne(Class<T> klass, String key, Object value) {
+        return mongoTemplate.findOne(Query.query(Criteria.where(key).is(value)), klass);
     }
 
     public Object findOne(Long id, String collectionName) {
@@ -95,34 +99,39 @@ public class BaseDao {
     public <T> List<T> findAll(Class<T> klass) {
         return mongoTemplate.findAll(klass);
     }
-    public <T> List<T> findAll(Class<T> klass,Object... keyValues) {
+
+    public <T> List<T> findAll(Class<T> klass, Object... keyValues) {
         Criteria criteria = criteria(keyValues);
-        return mongoTemplate.find(Query.query(criteria),klass);
+        return mongoTemplate.find(Query.query(criteria), klass);
     }
-    public <T> List<T> findAll(Class<T> klass,Map<String,Object> keyValues) {
+
+    public <T> List<T> findAll(Class<T> klass, Map<String, Object> keyValues) {
         Criteria criteria = criteria(keyValues);
-        return mongoTemplate.find(Query.query(criteria),klass);
+        return mongoTemplate.find(Query.query(criteria), klass);
     }
 
     public List findAll(String collection) {
         return mongoTemplate.findAll(Map.class, collection);
     }
-    public List<Map> findAll(String collectionName,Object... keyValues){
+
+    public List<Map> findAll(String collectionName, Object... keyValues) {
         Criteria criteria = criteria(keyValues);
-        return mongoTemplate.find(Query.query(criteria),Map.class,collectionName);
+        return mongoTemplate.find(Query.query(criteria), Map.class, collectionName);
     }
-    public GeoResults<Map> near(double x, double y, String collectionName){
-         return mongoTemplate.geoNear(NearQuery.near(x,y),Map.class,collectionName);
+
+    public GeoResults<Map> near(double x, double y, String collectionName) {
+        return mongoTemplate.geoNear(NearQuery.near(x, y), Map.class, collectionName);
     }
 
     public long count(Class klass) {
-        return count( klass,null);
+        return count(klass, null);
     }
-    public long count(Class klass,Map<String,Object> params) {
+
+    public long count(Class klass, Map<String, Object> params) {
         Criteria criteria = criteria(params);
-        if(criteria==null){
-         return mongoTemplate.count(null,klass);
-        }else {
+        if (criteria == null) {
+            return mongoTemplate.count(null, klass);
+        } else {
             return mongoTemplate.count(Query.query(criteria), klass);
         }
     }
@@ -130,20 +139,20 @@ public class BaseDao {
     public long count(String collection) {
         return mongoTemplate.count(null, collection);
     }
-    public long count(String collection,Map<String,Object> params) {
+
+    public long count(String collection, Map<String, Object> params) {
         Criteria criteria = criteria(params);
-        if(criteria==null){
-            return mongoTemplate.count(null,collection);
-        }else {
+        if (criteria == null) {
+            return mongoTemplate.count(null, collection);
+        } else {
             return mongoTemplate.count(Query.query(criteria), collection);
         }
     }
 
 
-
     private Criteria criteria(Map<String, Object> map) {
         Criteria criteria = null;
-        if(map!=null) {
+        if (map != null) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 if (criteria == null) {
                     criteria = Criteria.where(entry.getKey()).is(entry.getValue());

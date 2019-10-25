@@ -12,17 +12,17 @@ import java.util.List;
  * @author zt
  */
 @Document(collection = "menus")
-public class Menu  implements BaseEntity{
+public class Menu implements BaseEntity {
     @Id
     private String _id;
     private String name;
     private String description;
     private Long id;
     private Long restaurant_id;
-    private List<Food> foods=new ArrayList<Food>();
-    private Integer type=1;
-    private String icon_url="";
-    private Boolean is_selected=true;
+    private List<Food> foods = new ArrayList<Food>();
+    private Integer type = 1;
+    private String icon_url = "";
+    private Boolean is_selected = true;
 
     public String get_id() {
         return _id;

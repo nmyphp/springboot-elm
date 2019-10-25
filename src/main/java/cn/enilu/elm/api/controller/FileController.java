@@ -8,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -27,15 +31,16 @@ public class FileController extends BaseController {
     @Autowired
     private AppConfiguration appConfiguration;
     @Autowired
-    private  ResourceLoader resourceLoader;
+    private ResourceLoader resourceLoader;
+
     @RequestMapping(method = RequestMethod.POST, value = "/v1/addimg/{type}")
     @ResponseBody
     public Object add(@PathVariable("type") String type, @RequestParam("file") MultipartFile file) {
         if (!file.isEmpty()) {
             try {
-                String fileName= type+"_"+System.currentTimeMillis()+"."+file.getOriginalFilename().split("\\.")[1];
+                String fileName = type + "_" + System.currentTimeMillis() + "." + file.getOriginalFilename().split("\\.")[1];
                 Files.copy(file.getInputStream(), Paths.get(appConfiguration.getImgDir(), fileName));
-                return Rets.success("image_path",fileName);
+                return Rets.success("image_path", fileName);
             } catch (IOException | RuntimeException e) {
                 e.printStackTrace();
 
