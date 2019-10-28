@@ -3,6 +3,7 @@ package cn.enilu.elm.api.controller;
 import cn.enilu.elm.api.repository.BaseDao;
 import cn.enilu.elm.api.service.PositionService;
 import cn.enilu.elm.api.vo.CityInfo;
+import cn.enilu.elm.api.vo.Constants;
 import cn.enilu.elm.api.vo.Rets;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created  on 2017/12/29 0029.
@@ -29,30 +30,25 @@ public class PositionController extends BaseController {
 
     @RequestMapping(value = "/v1/cities", method = RequestMethod.GET)
 
-    public Object cities(@RequestParam("type") String type, HttpServletRequest request) {
-        Map cities = baseDao.findOne("cities");
-        Map data = (Map) cities.get("data");
+    public Object cities(@RequestParam("type") String type) {
+        if (Constants.CityType.guess.name().equals(type)) {
+            CityInfo cityInfo = positionService.getPostion(getIp());
+            String city = cityInfo.getCity();
+            if (Strings.isNullOrEmpty(city)) {
+                return Rets.failure();
+            }
+            return positionService.findByName(city);
+        }
+
+        Map result = baseDao.findOne("cities");
+        Optional<Map> data = Optional.ofNullable(result).map(re -> (Map) re.get("data"));
         switch (type) {
-            case "guess":
-                CityInfo cityInfo = positionService.getPostion(getIp());
-                String city = cityInfo.getCity();
-                if (Strings.isNullOrEmpty(city)) {
-                    return Rets.failure();
-                }
-                return positionService.findByName(city);
-
             case "hot":
-
-                return data.get("hotCities");
-
+                return data.map(re -> re.get("hotCities")).orElse(null);
             case "group":
-                return data;
-
-
+                return data.orElse(null);
             default:
                 break;
-
-
         }
         return Rets.failure();
 
