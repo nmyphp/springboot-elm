@@ -3,8 +3,8 @@ package cn.enilu.elm.api.service;
 import cn.enilu.elm.api.repository.BaseDao;
 import cn.enilu.elm.api.utils.AppConfiguration;
 import cn.enilu.elm.api.utils.HttpClients;
+import cn.enilu.elm.api.utils.Maps;
 import cn.enilu.elm.api.vo.CityInfo;
-import com.google.common.collect.Maps;
 import org.nutz.json.Json;
 import org.nutz.mapl.Mapl;
 import org.slf4j.Logger;
@@ -115,6 +115,9 @@ public class PositionService {
 
     public Map findByName(String cityName) {
         Map cities = baseDao.findOne("cities");
+        if (Maps.isEmpty(cities)) {
+            return null;
+        }
         Map<String, List> data = (Map) cities.get("data");
         Map result = null;
         for (Map.Entry<String, List> entry : data.entrySet()) {

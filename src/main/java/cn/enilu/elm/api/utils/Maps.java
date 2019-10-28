@@ -1,14 +1,19 @@
 package cn.enilu.elm.api.utils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created  on 2018/1/3 0003.
  *
- * @author zt
+ * @author zt,nmyphp
  */
 public class Maps {
     private Maps() {
+    }
+
+    public static HashMap newHashMap() {
+        return new HashMap(10);
     }
 
     public static <K, V> HashMap<K, V> newHashMap(K k, V v) {
@@ -32,5 +37,13 @@ public class Maps {
 
             return map;
         }
+    }
+
+    public static boolean isEmpty(Map map) {
+        return null == map || map.isEmpty();
+    }
+
+    public static boolean isNotEmpty(Map map) {
+        return !isEmpty(map);
     }
 }
