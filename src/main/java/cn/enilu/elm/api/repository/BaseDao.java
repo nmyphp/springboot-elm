@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.NearQuery;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -74,7 +75,7 @@ public class BaseDao {
         Criteria criteria = criteria(extraKeyValues);
         if (criteria == null) {
             List<Map> list = mongoTemplate.findAll(Map.class, collectionName);
-            if (list != null) {
+            if (!CollectionUtils.isEmpty(list)) {
                 return list.get(0);
             }
             return null;
